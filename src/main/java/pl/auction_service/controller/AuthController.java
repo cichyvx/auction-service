@@ -12,7 +12,7 @@ public class AuthController {
 
     private final UserService userService;
 
-    @RequestMapping(value = "/register", method = RequestMethod.PUT)
+    @PutMapping("/register")
     public HttpStatus register(@RequestBody SimpleUser simpleUser){
         return userService.addUser(simpleUser.getUsername(), simpleUser.getPassword()) ? HttpStatus.OK : HttpStatus.NO_CONTENT;
     }
