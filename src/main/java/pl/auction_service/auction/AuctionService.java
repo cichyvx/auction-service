@@ -1,6 +1,7 @@
 package pl.auction_service.auction;
 
 import lombok.AllArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import pl.auction_service.user.User;
 import pl.auction_service.user.UserRepository;
@@ -47,4 +48,16 @@ public class AuctionService {
         auctionRepository.bid(user.getId(), price, id);
         return true;
     }
+
+    @Scheduled(fixedDelay = 500)
+    private void scheduleFixedRateTaskAsync() throws InterruptedException {
+        List<Auction> auctions = auctionRepository.findAllByIsFinished((byte) 0);
+        Date date = new Date();
+        for (Auction auction : auctions){
+            if(auction.getTime_finish().before(date)){
+                auctionRepository.finish(auction.getId());
+            }
+        }
+    }
+
 }

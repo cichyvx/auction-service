@@ -24,5 +24,6 @@ public class Auction {
     private Date time_finish;
     private int price;
     private Long best_user;
-    private byte is_finished;
+    @Column(name = "is_finished")
+    private byte isFinished;
 }

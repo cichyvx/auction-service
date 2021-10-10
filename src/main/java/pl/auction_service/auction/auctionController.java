@@ -31,7 +31,7 @@ public class auctionController {
         auction.setTime_finish(new Date(System.currentTimeMillis() + ((long) simpleAuction.getFinishDate() * 60 * 1000)));
         auction.setPrice(simpleAuction.getStarterPrice());
         auction.setBest_user(userId);
-        auction.setIs_finished((byte) 0);
+        auction.setIsFinished((byte) 0);
         return auctionService.createAuction(auction)? HttpStatus.OK : HttpStatus.NO_CONTENT;
     }
 
