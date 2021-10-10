@@ -56,6 +56,8 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/allusers").permitAll()
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
                 .antMatchers(HttpMethod.PUT, "/register").permitAll()
+                .antMatchers(HttpMethod.PUT, "/auction/**").authenticated()
+                .antMatchers(HttpMethod.GET, "/auction/**").permitAll()
                 .antMatchers("/api/user").authenticated()
                 .antMatchers("/api/admin").hasRole("ADMIN")
                 .anyRequest().authenticated();

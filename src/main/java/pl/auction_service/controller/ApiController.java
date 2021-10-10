@@ -1,7 +1,6 @@
 package pl.auction_service.controller;
 
 import lombok.AllArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import pl.auction_service.user.User;
 import pl.auction_service.user.UserService;
@@ -26,7 +25,7 @@ public class ApiController {
         return "for authorized";
     }
 
-    @GetMapping("/user")
+    @GetMapping("/admin")
     public String admins(){
         return "for admins";
     }

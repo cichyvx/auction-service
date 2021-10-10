@@ -28,7 +28,7 @@ public class CustomAuthenticationProvider extends DaoAuthenticationProvider{
 
         User mayBeUser = service.getUserByUsername(username);
 
-        if(mayBeUser != null)
+        if(mayBeUser == null)
             throw new AuthenticationCredentialsNotFoundException("user not found");
         if(!getPasswordEncoder().matches(password, mayBeUser.getPassword()))
             throw new AuthenticationCredentialsNotFoundException("wrong password");
