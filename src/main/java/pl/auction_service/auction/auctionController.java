@@ -42,6 +42,11 @@ public class auctionController {
         return auctionService.bid(username, id, price)? HttpStatus.OK : HttpStatus.NO_CONTENT;
     }
 
+    @DeleteMapping("/{id}")
+    public HttpStatus deleteAuction(Principal principal, @PathVariable long id){
+        return auctionService.deleteAuction(id, principal.getName())? HttpStatus.OK : HttpStatus.NO_CONTENT;
+    }
+
     @GetMapping
     public List<Auction> getAllAuctions(){
         return auctionService.getAll();

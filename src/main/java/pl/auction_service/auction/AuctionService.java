@@ -49,6 +49,16 @@ public class AuctionService {
         return true;
     }
 
+
+    public boolean deleteAuction(long id, String username){
+        User user = userRepository.findUserByUsername(username);
+        Auction auction = auctionRepository.getById(id);
+        if (auction.getUserId() != user.getId())
+            return false;
+        auctionRepository.delete(auction);
+        return true;
+    }
+
     @Scheduled(fixedDelay = 500)
     private void scheduleFixedRateTaskAsync() throws InterruptedException {
         List<Auction> auctions = auctionRepository.findAllByIsFinished((byte) 0);
@@ -59,5 +69,4 @@ public class AuctionService {
             }
         }
     }
-
 }
