@@ -1,4 +1,4 @@
-package pl.auction_service.user;
+package pl.auction_service.wallet;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -7,13 +7,12 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long>{
+public interface WalletRepository extends JpaRepository<Wallet, Long> {
 
-    User findUserByUsername(String username);
+    Wallet findWalletByUserId(Long id);
 
-    @Transactional
     @Modifying
-    @Query("UPDATE users u SET u.username = ?2, u.password = ?3 WHERE u.id = ?1")
-    void updateUser(Long id, String username, String password);
-
+    @Transactional
+    @Query("UPDATE wallet w SET w.money = ?1 WHERE w.id = ?2")
+    void changeMoney(int money, long id);
 }

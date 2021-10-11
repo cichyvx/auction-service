@@ -61,10 +61,12 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.DELETE, "/user/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.PATCH, "/user/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.PATCH, "/auction/**").authenticated()
+                .antMatchers(HttpMethod.PATCH, "/wallet").authenticated()
                 .antMatchers(HttpMethod.GET, "/auction/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/user/","/user/userAuction/*").permitAll()
                 .antMatchers(HttpMethod.GET, "/user", "/user/myAuction").authenticated()
                 .antMatchers(HttpMethod.GET, "/login").permitAll()
+                .antMatchers(HttpMethod.GET, "/wallet").authenticated()
                 .anyRequest().authenticated();
     }
 }

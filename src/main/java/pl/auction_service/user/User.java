@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import pl.auction_service.auction.Auction;
+import pl.auction_service.wallet.Wallet;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -28,12 +29,19 @@ public class User implements UserDetails {
     @OneToMany(targetEntity = Auction.class, mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Auction> auctions;
 
+    @OneToOne(targetEntity = Wallet.class, mappedBy = "owner")
+    private Wallet userWallet;
+
     public Long getId() {
         return id;
     }
 
     public List<Auction> getAuctions() {
         return auctions.stream().toList();
+    }
+
+    public Wallet getWallet() {
+        return userWallet;
     }
 
     @Override

@@ -6,6 +6,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import pl.auction_service.user.User;
 import pl.auction_service.user.UserRepository;
+import pl.auction_service.wallet.WalletRepository;
 
 import java.util.Date;
 import java.util.List;
@@ -16,8 +17,12 @@ public class AuctionService {
 
     private final AuctionRepository auctionRepository;
     private final UserRepository userRepository;
+    private final WalletRepository walletRepository;
 
     public boolean createAuction(SimpleAuction simpleAuction, String username) {
+        if(simpleAuction.getStarterPrice() < 0 ||
+            simpleAuction.getFinishDate() <= 0)
+            return false;
         long userId = userRepository.findUserByUsername(username).getId();
         Date date = new Date();
         Auction auction = new Auction();
@@ -46,18 +51,28 @@ public class AuctionService {
     }
 
     public boolean bid(String username, long id, int price) throws NotFoundException {
+        if(price <= 0)
+            return false;
         Auction auction = getAuction(id);
         User user = userRepository.findUserByUsername(username);
         if(auction == null || user == null){
             System.err.println("cannot find auction");
             return false;
         }
+
         if(auction.getTimeFinish().before(new Date()) ||
                 auction.getUserId().equals(user.getId()) ||
                 auction.getPrice() >= price){
             System.err.println("cannot Bid this auction");
             return false;
         }
+
+        if(!user.getWallet().spendMoney(price)){
+            System.err.println("not enough money");
+            return false;
+        }
+
+        walletRepository.changeMoney(-price, user.getWallet().getId());
         auctionRepository.bid(user.getId(), price, id);
         return true;
     }
@@ -72,13 +87,21 @@ public class AuctionService {
         return true;
     }
 
+    private void finalizeAuction(Auction auction){
+        if(auction.getUserId() != auction.getBestUser()){
+            User seller = auction.getOwner();
+            walletRepository.changeMoney(auction.getPrice(), seller.getWallet().getId());
+        }
+        auctionRepository.finish(auction.getId());
+    }
+
     @Scheduled(fixedDelay = 500)
     private void scheduleFixedRateTaskAsync() throws InterruptedException {
         List<Auction> auctions = auctionRepository.findAllByIsFinished((byte) 0);
         Date date = new Date();
         for (Auction auction : auctions){
             if(auction.getTimeFinish().before(date)){
-                auctionRepository.finish(auction.getId());
+                finalizeAuction(auction);
             }
         }
     }
