@@ -12,7 +12,7 @@ public interface AuctionRepository extends JpaRepository<Auction, Long> {
     List<Auction> findAllByUserId(long id);
 
     @Modifying
-    @Query("UPDATE auction a SET a.best_user = ?1, a.price = ?2 WHERE a.id = ?3")
+    @Query("UPDATE auction a SET a.bestUser = ?1, a.price = ?2 WHERE a.id = ?3")
     @Transactional
     void bid(Long userId, int price, Long auctionId);
 
@@ -22,5 +22,7 @@ public interface AuctionRepository extends JpaRepository<Auction, Long> {
     void finish(Long id);
 
     List<Auction> findAllByIsFinished(Byte isFinished);
+
+    Auction getAuctionById(Long id);
 
 }

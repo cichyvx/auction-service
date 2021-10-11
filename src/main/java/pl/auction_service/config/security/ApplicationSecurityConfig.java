@@ -54,15 +54,17 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and().formLogin().loginProcessingUrl("/login").permitAll().and()
                 .authorizeRequests()
-                .antMatchers("/api/all", "/login", "/registry").permitAll()
-                .antMatchers("/api/allusers").permitAll()
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
-                .antMatchers(HttpMethod.PUT, "/register").permitAll()
+                .antMatchers(HttpMethod.PUT, "/user").permitAll()
                 .antMatchers(HttpMethod.PUT, "/auction/**").authenticated()
                 .antMatchers(HttpMethod.DELETE, "/auction/*").authenticated()
+                .antMatchers(HttpMethod.DELETE, "/user/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PATCH, "/user/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PATCH, "/auction/**").authenticated()
                 .antMatchers(HttpMethod.GET, "/auction/**").permitAll()
-                .antMatchers("/api/user").authenticated()
-                .antMatchers("/api/admin").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/user/","/user/userAuction/*").permitAll()
+                .antMatchers(HttpMethod.GET, "/user", "/user/myAuction").authenticated()
+                .antMatchers(HttpMethod.GET, "/login").permitAll()
                 .anyRequest().authenticated();
     }
 }

@@ -1,14 +1,12 @@
 package pl.auction_service.auction;
 
+import javassist.NotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import pl.auction_service.user.UserService;
 
 import java.security.Principal;
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/auction")
@@ -16,27 +14,14 @@ import java.util.Optional;
 public class auctionController {
 
     private final AuctionService auctionService;
-    private final UserService userService;
 
     @PutMapping
     public HttpStatus createAuction(Principal principal, @RequestBody SimpleAuction simpleAuction){
-        String username = principal.getName();
-        long userId = userService.getUserByUsername(username).getId();
-        Date date = new Date();
-        Auction auction = new Auction();
-        auction.setUserId(userId);
-        auction.setTitle(simpleAuction.getTitle());
-        auction.setContent(simpleAuction.getContent());
-        auction.setTime_start(date);
-        auction.setTime_finish(new Date(System.currentTimeMillis() + ((long) simpleAuction.getFinishDate() * 60 * 1000)));
-        auction.setPrice(simpleAuction.getStarterPrice());
-        auction.setBest_user(userId);
-        auction.setIsFinished((byte) 0);
-        return auctionService.createAuction(auction)? HttpStatus.OK : HttpStatus.NO_CONTENT;
+        return auctionService.createAuction(simpleAuction, principal.getName())? HttpStatus.OK : HttpStatus.NO_CONTENT;
     }
 
     @PatchMapping("/{id}")
-    public HttpStatus bidding(Principal principal,@PathVariable long id, @RequestBody Bid bid){
+    public HttpStatus bidding(Principal principal,@PathVariable long id, @RequestBody Bid bid) throws NotFoundException {
         int price = bid.getPrice();
         String username = principal.getName();
         return auctionService.bid(username, id, price)? HttpStatus.OK : HttpStatus.NO_CONTENT;
@@ -53,15 +38,8 @@ public class auctionController {
     }
 
     @GetMapping("/{id}")
-    public Auction getAuction(@PathVariable long id) {
-        Optional<Auction> auction = auctionService.getAuction(id);
-        return auction.get();
+    public Auction getAuction(@PathVariable long id) throws NotFoundException {
+        return auctionService.getAuction(id);
     }
-
-    @GetMapping("/forUser/{user_name}")
-    public List<Auction> getAllAuctionForUser(@PathVariable String user_name){
-        return auctionService.getAllForUser(user_name);
-    }
-
 
 }
