@@ -9,6 +9,7 @@ import javax.persistence.*;
 @Entity(name = "wallet")
 @Table(name = "wallet")
 @Getter
+@Setter
 public class Wallet {
 
     @Id

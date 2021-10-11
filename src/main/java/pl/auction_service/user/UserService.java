@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.auction_service.auction.Auction;
+import pl.auction_service.wallet.Wallet;
+import pl.auction_service.wallet.WalletRepository;
 
 import java.util.List;
 
@@ -16,6 +18,7 @@ import java.util.List;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final WalletRepository walletRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -46,6 +49,10 @@ public class UserService implements UserDetailsService {
         user.setPassword(new BCryptPasswordEncoder().encode(password));
         user.setRoles(0);
         userRepository.save(user);
+        Wallet wallet = new Wallet();
+        wallet.setUserId(getUserByUsername(username).getId());
+        wallet.setMoney(0);
+        walletRepository.save(wallet);
         return true;
     }
 
