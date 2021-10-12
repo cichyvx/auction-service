@@ -67,7 +67,7 @@ public class AuctionService {
             return false;
         }
 
-        if(!user.getWallet().spendMoney(price)){
+        if(user.getWallet().getMoney() - price < 0){
             System.err.println("not enough money");
             return false;
         }

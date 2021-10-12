@@ -27,11 +27,12 @@ public class WalletService {
     public boolean changeMoney(int money, String username) {
         Wallet wallet = getWalletFromUser(username);
         if(money < 0){
-            if(!wallet.spendMoney(money))
+            if(wallet.getMoney() - money < 0)
                 return false;
+            wallet.setMoney(wallet.getMoney() - money);
         }
         else
-            wallet.addMoney(money);
+            wallet.setMoney(wallet.getMoney() + money);
 
         walletRepository.changeMoney(wallet.getMoney(), wallet.getId());
         return true;

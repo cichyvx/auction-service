@@ -26,16 +26,4 @@ public class Wallet {
     )
     private User owner;
 
-    public void addMoney(int money){
-        this.money += money;
-    }
-
-    public boolean spendMoney(int money){
-        if(this.money - money >= 0){
-            this.money -= money;
-            return true;
-        }
-        return false;
-    }
-
 }
