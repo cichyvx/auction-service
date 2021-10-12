@@ -24,7 +24,6 @@ public class User implements UserDetails {
     private String password;
     private int roles;
 
-    //@OneToMany(targetEntity = Auction.class, cascade = CascadeType.ALL)
     @JsonManagedReference
     @OneToMany(targetEntity = Auction.class, mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Auction> auctions;
