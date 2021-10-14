@@ -95,12 +95,14 @@ public class AuctionService {
 
         //bidding user and auction must exist
         if(auction == null || user == null){
-            System.err.println("cannot find auction");
+            System.err.println("cannot find auction or user");
             return false;
         }
 
-        //date cannot be earlier than the current date
-        if(auction.getTimeFinish().before(new Date()) ||
+        //auction cannot be finished
+        //user cannot bid owned auction
+        //price must be higher than previous
+        if(auction.isFinished() ||
                 auction.getUserId().equals(user.getId()) ||
                 auction.getPrice() >= price){
             System.err.println("cannot Bid this auction");
