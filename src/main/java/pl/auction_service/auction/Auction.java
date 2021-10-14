@@ -58,4 +58,8 @@ public class Auction {
     public User getOwner() {
         return owner;
     }
+
+    public boolean isFinished(){
+        return isFinished == (byte)1;
+    }
 }
