@@ -131,7 +131,7 @@ public class AuctionService {
 
         //user and auction must exist
         if(user == null || auction == null){
-
+            return false;
         }
 
         //auction owner must be same as user trying to delete this auction
