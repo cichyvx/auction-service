@@ -9,6 +9,7 @@ import pl.auction_service.wallet.Wallet;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -45,7 +46,12 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        List<GrantedAuthority> list = Collections.emptyList();
+        switch (roles){
+            case 1 -> list.add(new Role("USER"));
+            case 2 -> list.add(new Role("ADMIN"));
+        }
+        return list;
     }
 
     @Override
@@ -77,4 +83,19 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return false;
     }
+
+    private final class Role implements GrantedAuthority{
+
+        private final String name;
+
+        private Role(String name){
+            this.name = name;
+        }
+
+        @Override
+        public String getAuthority() {
+            return name;
+        }
+    }
+
 }
