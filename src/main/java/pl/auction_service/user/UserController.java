@@ -74,7 +74,7 @@ public class UserController {
     }
 
     /**
-     *
+     * this can be possible only if you be logged as user with role ADMIN
      * @param username user that we want details update
      * @param user details to change, if you want to don't change one of them you must write it equal as current
      * @return 200 if details was updated or 400 if action failed
